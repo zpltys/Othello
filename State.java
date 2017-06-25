@@ -11,6 +11,13 @@ public class State {
             s[i][j] = 0;
     }
 
+    public State(State an) {
+        this();
+        int i, j;
+        for(i = 0; i < 8; i++) for(j = 0; j < 8; j++) 
+            s[i][j] = an.s[i][j];
+    }
+
     //reverse 1 and 2 in s
     public void reverse() {
         int i, j;
