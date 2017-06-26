@@ -1,20 +1,96 @@
 import java.awt.*;
+import java.awt.event.*;
 import javax.swing.*;
 import java.awt.geom.*;
 
 public class Board extends Canvas {
+    private State state; //the state of chess now
+    private State nextFrame;
+    private int scale; //the size of one check
+    private int lineWidth;
+    private Color colors[];
+    private int PosX, PosY, bePosX, bePosY;
+    private int BeforeClickedX, BeforeClickedY;
+    private int turn;
+
+    int r2L(int a) {
+        if(a % (scale + lineWidth) == 0) return -1;
+        return a / (scale + lineWidth);
+    }
+    Point2D real2Logistic(int x, int y) {
+        return new Point2D.Float(r2L(x), r2L(y));
+    }
+
+    int l2R (int a) {
+        return lineWidth - 1 + (scale + 1) / 2 + (scale + lineWidth) * a;
+    }
+    Point2D logistic2Real(int x, int y) {
+        return new Point2D.Float(l2R(x), l2R(y));
+    }
+
+    int calBoard(int x) {
+        return x * (scale + lineWidth);
+    }
+    void drawBorder(int i, int j, Graphics2D g2, Color c) {
+        if(i < 0 || i > 7 || j < 0 || j > 7) return;
+        g2.setPaint(c);
+        int length = lineWidth + scale;
+        g2.draw(new Rectangle.Float(calBoard(i), calBoard(j), length, length));
+    }
+
+    void drawChess(int i, int j, Graphics2D g2, Color c) {
+        g2.setColor(c);
+        g2.fillOval(calBoard(i) + 1, calBoard(j) + 1, scale - 2, scale - 2);
+    }
 
     @Override
     public void paint(Graphics g) {
-        Graphics2D g2 = (Graphics2D) g;
-
-        g2.setPaint(Color.red);
-        g2.draw(new Line2D.Float(1, 1, 300, 100));
+        Graphics2D g2 = (Graphics2D)g;
+        int i, j;
+        for(i = 0; i < 8; i++) for(j = 0; j < 8; j++) {
+            drawBorder(i, j, g2, Color.black);
+        }
+        for(i = 0; i < 8; i++) for(j = 0; j < 8; j++) {
+            if(state.s[i][j] != 0) drawChess(i, j, g2, colors[state.s[i][j]]);
+        }
     }
 
+    @Override
+    public void update(Graphics g) {
+        Graphics2D g2 = (Graphics2D)g;
+        int i, j;
+        for(i = 0; i < 8; i++) for(j = 0; j < 8; j++) {
+            if(nextFrame.s[i][j] != state.s[i][j]) {
+                drawChess(i, j, g2, colors[nextFrame.s[i][j]]);
+                state.s[i][j] = nextFrame.s[i][j];
+            }
+        }
+        if(bePosX != PosX || bePosY != PosY) {
+            drawBorder(bePosX, bePosY, g2, Color.black);
+            drawBorder(PosX, PosY, g2, colors[3]);
+        }
+    }
+
+
+
     public Board() {
-        setSize(200, 200);
-        setBackground(Color.green);
+        scale = 39;
+        lineWidth = 1;
+        colors = new Color[4];
+        colors[2] = Color.white;
+        colors[1] = Color.black;
+        colors[0] = Color.gray;
+        colors[3] = Color.green;
+        setBackground(colors[0]);
+        setSize(330, 330);
+        state = new State();
+        state.init();
+        nextFrame = new State(state);
+        turn = 1;
+
+        MyMouseListener m = new MyMouseListener();
+        addMouseListener(m);
+        addMouseMotionListener(m);
     }
 
     public static void main(String[] args) {
@@ -24,5 +100,77 @@ public class Board extends Canvas {
         f.setLayout(null);
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         f.setVisible(true);
+    }
+
+    class MyMouseListener extends MouseAdapter {
+        @Override
+        public void mouseClicked(MouseEvent e) {
+     //       System.out.println("turn: " + turn);
+            int x = e.getX();
+            int y = e.getY();
+            x = r2L(x); y = r2L(y);
+            if(x == -1 || y == -1) return;
+            nextFrame = new State(state);
+/*
+            System.out.println("x: " + x + "  y:" + y);
+            if(x == 7 && y == 7) {
+                nextFrame.init();
+                System.out.println("repaint");
+                repaint();
+            }
+*/
+
+            if(nextFrame.test(x, y, turn) == -1) return;
+            nextFrame.insert(x, y, turn);
+            int i, j;
+            boolean ok1, ok2;
+            ok1 = ok2 = false;
+            for(i = 0; i < 8; i++) {
+                for(j = 0; j < 8; j++) {
+                    if(nextFrame.s[i][j] == 0 
+                            && nextFrame.test(i, j, 3 - turn) > 0) {
+                        ok1 = true;
+                        break;
+                    }
+                }
+                if(ok1) break;
+            }
+            if(ok1) {
+                turn = 3 - turn;
+                repaint();
+            } else {
+                for(i = 0; i < 8; i++) {
+                    for(j = 0; j < 8; j++) {
+                        if(nextFrame.s[i][j] == 0 && 
+                                nextFrame.test(i, j, turn) > 0) {
+                            ok2 = true;
+                            break;
+                        }
+                    }
+                    if(ok2) break;
+                }
+                if(!ok2) {
+                    repaint();
+                    int type = JOptionPane.showConfirmDialog(null, "game over, will you play it again?", "tip", JOptionPane.YES_NO_OPTION);
+                    if(type == JOptionPane.YES_OPTION) {
+                        nextFrame.init();
+                        repaint();
+                    }
+                }
+            }
+        }
+
+        @Override
+        public void mouseMoved(MouseEvent e) {
+            int x = e.getX();
+            int y = e.getY();
+            x = r2L(x); y = r2L(y);
+            if(x == -1 || y == -1) return;
+            if(PosX != x || PosY != y) {
+                bePosX = PosX; bePosY = PosY;
+                PosX = x; PosY = y;
+                repaint();
+            }
+        }
     }
 }

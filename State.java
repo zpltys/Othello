@@ -18,10 +18,20 @@ public class State {
             s[i][j] = an.s[i][j];
     }
 
+    public void init() {
+        int i, j;
+        for(i = 0; i < 8; i++) for(j = 0; j < 8; j++) {
+            if((i == 3 || i == 4) && (j == 3 || j == 4)) {
+                if(i == j) s[i][j] = 2;
+                else s[i][j] = 1;
+            } else s[i][j] = 0;
+        }
+    }
+
     //reverse 1 and 2 in s
     public void reverse() {
         int i, j;
-        for(i = 0; i < 8; j++) for(j = 0; j < 8; j++) {
+        for(i = 0; i < 8; i++) for(j = 0; j < 8; j++) {
             if(s[i][j] == 0) continue;
             s[i][j] = 3 - s[i][j];
         }
@@ -35,7 +45,11 @@ public class State {
         while(x <= 7 && x >= 0 && y <= 7 && y >= 0) {
             if(s[x][y] == 0) return 0;
             if(s[x][y] == 1) break;
+            count++;
+            x += r;
+            y += c;
         }
+        if(x < 0 || x > 7 || y < 0 || y > 7) return 0;
         x -= r; y -= c;
         while(s[x][y] == 2) {
             s[x][y] = 1;
@@ -74,6 +88,8 @@ public class State {
         for(i = 0; i < 8; i++) for(j = 0; j < 8; j++) {
             an.s[i][j] = s[i][j];
         }
-        return an.insert(x, y, color);
+        int val = an.insert(x, y, color);
+//        System.out.println("x: " + x + "  y:" + y + "  color:" + color + "val: " + val);
+        return val;
     }
 }
