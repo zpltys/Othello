@@ -12,6 +12,7 @@ public class Board extends Canvas {
     private int PosX, PosY, bePosX, bePosY;
     private int BeforeClickedX, BeforeClickedY;
     private int turn;
+    public MainFrame mainFrame;
 
     int r2L(int a) {
         if(a % (scale + lineWidth) == 0) return -1;
@@ -69,6 +70,19 @@ public class Board extends Canvas {
             drawBorder(bePosX, bePosY, g2, Color.black);
             drawBorder(PosX, PosY, g2, colors[3]);
         }
+
+        int white, black;
+        white = black = 0;
+        for(i = 0; i < 7; i++) for(j = 0; j < 7; j++) {
+            if(nextFrame.s[i][j] == 1) black++;
+            if(nextFrame.s[i][j] == 2) white++;
+        }
+        mainFrame.white.setText("\tWhite:\t" + white);
+        mainFrame.black.setText("\tBlack:\t" + black);
+        String nTurn;
+        if(turn == 1) nTurn = "black";
+        else nTurn = "white";
+        mainFrame.turn.setText("\tNext:\t" + nTurn);
     }
 
 
