@@ -12,6 +12,8 @@ public class Board extends Canvas {
     private int PosX, PosY, bePosX, bePosY;
     private int BeforeClickedX, BeforeClickedY;
     private int turn;
+    private long beforeTime;
+    private boolean testAi;
     public MainFrame mainFrame;
 
     int r2L(int a) {
@@ -102,6 +104,8 @@ public class Board extends Canvas {
         nextFrame = new State(state);
         turn = 1;
 
+        testAi = true;
+
         MyMouseListener m = new MyMouseListener();
         addMouseListener(m);
         addMouseMotionListener(m);
@@ -119,10 +123,24 @@ public class Board extends Canvas {
     class MyMouseListener extends MouseAdapter {
         @Override
         public void mouseClicked(MouseEvent e) {
-     //       System.out.println("turn: " + turn);
-            int x = e.getX();
-            int y = e.getY();
-            x = r2L(x); y = r2L(y);
+            long nowTime = System.currentTimeMillis();
+            if(nowTime - beforeTime < 500) {
+                beforeTime = nowTime;
+                return;
+            }
+            beforeTime = nowTime;
+
+            int x, y;
+            if(turn == 2 && testAi) {
+                AI ai = new Dfs();
+                Point = ai.calStep(state, 2);
+                x = Point.getX();
+                y = Point.getY();
+            } else {
+                x = e.getX();
+                y = e.getY();
+                x = r2L(x); y = r2L(y);
+            }
             if(x == -1 || y == -1) return;
             nextFrame = new State(state);
 /*
