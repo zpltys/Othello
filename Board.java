@@ -13,7 +13,7 @@ public class Board extends Canvas {
     private int BeforeClickedX, BeforeClickedY;
     private int turn;
     private long beforeTime;
-    private boolean testAi;
+    public boolean testAi;
     public MainFrame mainFrame;
 
     int r2L(int a) {
@@ -104,7 +104,7 @@ public class Board extends Canvas {
         nextFrame = new State(state);
         turn = 1;
 
-        testAi = true;
+        //  testAi = true;
 
         MyMouseListener m = new MyMouseListener();
         addMouseListener(m);
@@ -124,33 +124,35 @@ public class Board extends Canvas {
         @Override
         public void mouseClicked(MouseEvent e) {
             long nowTime = System.currentTimeMillis();
-            if(nowTime - beforeTime < 500) {
-                beforeTime = nowTime;
-                return;
-            }
+            if(nowTime - beforeTime < 500) return;
             beforeTime = nowTime;
 
             int x, y;
             if(turn == 2 && testAi) {
-                AI ai = new Dfs();
-                Point = ai.calStep(state, 2);
-                x = Point.getX();
-                y = Point.getY();
+                /*    AI ai = new Dfs();
+                      Point p = ai.calStep(state, 2);
+                      x = (int)p.getX();
+                      y = (int)p.getY();
+                      */
+
+                x = -1; y = -1;
             } else {
                 x = e.getX();
                 y = e.getY();
                 x = r2L(x); y = r2L(y);
             }
             if(x == -1 || y == -1) return;
+
+
             nextFrame = new State(state);
-/*
-            System.out.println("x: " + x + "  y:" + y);
-            if(x == 7 && y == 7) {
-                nextFrame.init();
-                System.out.println("repaint");
-                repaint();
-            }
-*/
+            /*
+               System.out.println("x: " + x + "  y:" + y);
+               if(x == 7 && y == 7) {
+               nextFrame.init();
+               System.out.println("repaint");
+               repaint();
+               }
+            */
 
             if(nextFrame.test(x, y, turn) == -1) return;
             nextFrame.insert(x, y, turn);
@@ -163,7 +165,7 @@ public class Board extends Canvas {
                             && nextFrame.test(i, j, 3 - turn) > 0) {
                         ok1 = true;
                         break;
-                    }
+                            }
                 }
                 if(ok1) break;
             }
@@ -177,16 +179,28 @@ public class Board extends Canvas {
                                 nextFrame.test(i, j, turn) > 0) {
                             ok2 = true;
                             break;
-                        }
+                                }
                     }
                     if(ok2) break;
                 }
                 if(!ok2) {
                     repaint();
-                    int type = JOptionPane.showConfirmDialog(null, "game over, will you play it again?", "tip", JOptionPane.YES_NO_OPTION);
+                    String s;
+                    int white = 0, black = 0;
+                    for(i = 0; i < 8; i++) for(j = 0; j < 8; j++) {
+                        if(nextFrame.s[i][j] == 1) black++;
+                        if(nextFrame.s[i][j] == 2) white++;
+                    }
+                    if(black > white) s = "Black";
+                    else s = "White";
+
+                    int type = JOptionPane.showConfirmDialog(null, s + " win!\nwill you play it again?", "tip", JOptionPane.YES_NO_OPTION);
                     if(type == JOptionPane.YES_OPTION) {
                         nextFrame.init();
                         repaint();
+                    } else {
+                        mainFrame.myMenu.setVisible(true);
+                        mainFrame.dispose();
                     }
                 }
             }
@@ -202,6 +216,12 @@ public class Board extends Canvas {
                 bePosX = PosX; bePosY = PosY;
                 PosX = x; PosY = y;
                 repaint();
+            }
+
+            if(testAi && turn == 2) {
+                long nowTime = System.currentTimeMillis();
+                if(nowTime - beforeTime < 500) return;
+                mouseClicked(e);
             }
         }
     }

@@ -5,6 +5,7 @@ import javax.swing.*;
 public class MyMenu extends JFrame {
     private JButton single, multi, setting, exit;
     private JPanel globalPanel, setPanel;
+    private MainFrame mainFrame;
 
     MyMenu(String s) {
         super(s);
@@ -44,6 +45,7 @@ public class MyMenu extends JFrame {
 
         setContentPane(globalPanel);
         setSize(300, 200);
+        setLocation(500, 250);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
     }
@@ -54,9 +56,17 @@ public class MyMenu extends JFrame {
 
     class MenuActionListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-    //        String s = e.getActionCommand();
             JButton source = (JButton)e.getSource();
-            System.out.println(source.getText());
+            if(source == single || source == multi) {
+                MyMenu.this.setVisible(false);
+                mainFrame = new MainFrame();
+                mainFrame.setAi(source == single);
+                mainFrame.myMenu = MyMenu.this;
+            } else {
+                if(source == exit) {
+                    MyMenu.this.dispose();
+                }
+            }
         }
     }
 }

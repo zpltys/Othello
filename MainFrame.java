@@ -4,6 +4,7 @@ import javax.swing.*;
 public class MainFrame extends JFrame {
     private Board board;
     public JTextArea white, black, turn;
+    public MyMenu myMenu;
 
     public MainFrame() {
         JPanel jp = new JPanel();
@@ -37,6 +38,10 @@ public class MainFrame extends JFrame {
         add(jp);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
+    }
+
+    public void setAi(boolean f) {
+        board.testAi = f;
     }
 
     public static void main(String args[]) {
