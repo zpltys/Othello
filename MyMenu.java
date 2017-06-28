@@ -6,6 +6,7 @@ public class MyMenu extends JFrame {
     private JButton single, multi, setting, exit;
     private JPanel globalPanel, setPanel;
     private MainFrame mainFrame;
+    public int turn;
 
     MyMenu(String s) {
         super(s);
@@ -43,6 +44,8 @@ public class MyMenu extends JFrame {
         globalPanel.add(mP);
         globalPanel.add(setPanel);
 
+        turn = 1;
+
         setContentPane(globalPanel);
         setSize(300, 200);
         setLocation(500, 250);
@@ -61,10 +64,15 @@ public class MyMenu extends JFrame {
                 MyMenu.this.setVisible(false);
                 mainFrame = new MainFrame();
                 mainFrame.setAi(source == single);
+                mainFrame.setTurn(turn);
                 mainFrame.myMenu = MyMenu.this;
             } else {
                 if(source == exit) {
                     MyMenu.this.dispose();
+                } else {
+                    SetTurn s = new SetTurn();
+                    s.myMenu = MyMenu.this;
+                    MyMenu.this.setVisible(false);
                 }
             }
         }

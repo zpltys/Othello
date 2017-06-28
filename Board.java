@@ -11,10 +11,14 @@ public class Board extends Canvas {
     private Color colors[];
     private int PosX, PosY, bePosX, bePosY;
     private int BeforeClickedX, BeforeClickedY;
-    private int turn;
+    public int turn;
+    public int initTurn;
     private long beforeTime;
     public boolean testAi;
     public MainFrame mainFrame;
+
+
+    public boolean sync;
 
     int r2L(int a) {
         if(a % (scale + lineWidth) == 0) return -1;
@@ -104,6 +108,8 @@ public class Board extends Canvas {
         nextFrame = new State(state);
         turn = 1;
 
+        sync = true;
+
         //  testAi = true;
 
         MyMouseListener m = new MyMouseListener();
@@ -129,13 +135,10 @@ public class Board extends Canvas {
 
             int x, y;
             if(turn == 2 && testAi) {
-                /*    AI ai = new Dfs();
-                      Point p = ai.calStep(state, 2);
-                      x = (int)p.getX();
-                      y = (int)p.getY();
-                      */
-
-                x = -1; y = -1;
+                AI ai = new Dfs();
+                Point p = ai.calStep(state, 2);
+                x = (int)p.getX();
+                y = (int)p.getY();
             } else {
                 x = e.getX();
                 y = e.getY();
@@ -197,6 +200,7 @@ public class Board extends Canvas {
                     int type = JOptionPane.showConfirmDialog(null, s + " win!\nwill you play it again?", "tip", JOptionPane.YES_NO_OPTION);
                     if(type == JOptionPane.YES_OPTION) {
                         nextFrame.init();
+                        turn = initTurn;
                         repaint();
                     } else {
                         mainFrame.myMenu.setVisible(true);
@@ -221,7 +225,12 @@ public class Board extends Canvas {
             if(testAi && turn == 2) {
                 long nowTime = System.currentTimeMillis();
                 if(nowTime - beforeTime < 500) return;
-                mouseClicked(e);
+                if(sync) {
+                    sync = false;
+//                    System.out.println("ai");
+                    mouseClicked(e);
+                    sync = true;
+                }
             }
         }
     }

@@ -10,6 +10,8 @@ public class MainFrame extends JFrame {
         JPanel jp = new JPanel();
         jp.setLayout(new FlowLayout());
 
+
+
         board = new Board();
         board.mainFrame = this;
 
@@ -42,6 +44,10 @@ public class MainFrame extends JFrame {
 
     public void setAi(boolean f) {
         board.testAi = f;
+    }
+    public void setTurn(int t) {
+        board.turn = t;
+        board.initTurn = t;
     }
 
     public static void main(String args[]) {
