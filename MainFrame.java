@@ -49,6 +49,9 @@ public class MainFrame extends JFrame {
         board.turn = t;
         board.initTurn = t;
     }
+    public void setLevel(int level) {
+        board.level = level;
+    }
 
     public static void main(String args[]) {
         new MainFrame();

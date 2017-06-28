@@ -7,6 +7,7 @@ public class MyMenu extends JFrame {
     private JPanel globalPanel, setPanel;
     private MainFrame mainFrame;
     public int turn;
+    public int level;
 
     MyMenu(String s) {
         super(s);
@@ -65,6 +66,7 @@ public class MyMenu extends JFrame {
                 mainFrame = new MainFrame();
                 mainFrame.setAi(source == single);
                 mainFrame.setTurn(turn);
+                mainFrame.setLevel(level);
                 mainFrame.myMenu = MyMenu.this;
             } else {
                 if(source == exit) {

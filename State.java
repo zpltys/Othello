@@ -1,6 +1,6 @@
 public class State {
     //0 means empty, 1 means black, 2 means white
-    public int[][] s;
+    public int[][] s, weight;
 
     public State() {
         s = new int[8][];

@@ -16,6 +16,7 @@ public class Board extends Canvas {
     private long beforeTime;
     public boolean testAi;
     public MainFrame mainFrame;
+    public int level;
 
 
     public boolean sync;
@@ -107,6 +108,7 @@ public class Board extends Canvas {
         state.init();
         nextFrame = new State(state);
         turn = 1;
+        level = 3;
 
         sync = true;
 
@@ -135,7 +137,7 @@ public class Board extends Canvas {
 
             int x, y;
             if(turn == 2 && testAi) {
-                AI ai = new Dfs();
+                AI ai = new Dfs(level);
                 Point p = ai.calStep(state, 2);
                 x = (int)p.getX();
                 y = (int)p.getY();
