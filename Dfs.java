@@ -5,8 +5,8 @@ import java.util.Comparator;
 import java.util.List;
 public class Dfs extends AI{
 
-	public int [][]weight;
-	public Dfs() {
+	//public int [][]weight;
+	/*public Dfs() {
         weight = new int[8][];
         int i, j;
         for(i = 0; i < 8; i++) 
@@ -26,7 +26,7 @@ public class Dfs extends AI{
         weight[0][7] = 10;
         weight[7][0] = 10;
         weight[7][7] = 10;
-    }
+    }*/
 	@Override
 	public Point calStep(State state,int color) 
 	{
@@ -39,26 +39,34 @@ public class Dfs extends AI{
 		for(int i = 0;i < 8;i++)
 			for(int j = 0;j < 8;j++)
 			{
-				int x = state.test(i,j,color);
+				int x = state.test1(i,j,color);
 				if(x > 0)
+				{
 					statevList.add(new statev(i,j,x));
+					//System.out.println(i+" "+j+"\n");
+				}
 			}
 		Collections.sort(statevList, new sortstatev());
 		int count = 0;
 		for(statev ss : statevList)
 		{
 			count++;
+			if(count > 5)
+				break;
 				State temp = new State(state);
-				int x = temp.insert(ss.x,ss.y,color);
-					x += mean(temp,3 - color,5);
-					x *= weight[ss.x][ss.y];
+				int x = temp.insert1(ss.x,ss.y,color);
+				System.out.println(ss.x+" "+ss.y+" "+x+"  ");
+					x -= mean(temp,3 - color,5);
+				System.out.println(x+'\n');	
+					//x *= weight[ss.x][ss.y];
 					if(x > ans)
 					{
 						ans = x;
 						p.x = ss.x;
 						p.y = ss.y;
 					}
-			}
+		}
+		System.out.println(p.x+" "+p.y+'\n');	
 		return p;
 	}
 	
@@ -77,7 +85,7 @@ public class Dfs extends AI{
         public int compare(Object o1, Object o2) {
         	statev s1 = (statev) o1;
         	statev s2 = (statev) o2;
-         if(s1.value > s2.value)
+         if(s1.value < s2.value)
         	 return 1;
          else
         	 return -1;
@@ -92,7 +100,7 @@ public class Dfs extends AI{
 		for(int i = 0;i < 8;i++)
 			for(int j = 0;j < 8;j++)
 			{
-				int x = state.test(i,j,color);
+				int x = state.test1(i,j,color);
 				if(x > 0)
 					statevList.add(new statev(i,j,x));
 			}
@@ -112,7 +120,7 @@ public class Dfs extends AI{
 			for(int i = 0;i < 8;i++)
 				for(int j = 0;j < 8;j++)
 				{
-					int x = state.test(i,j,color);
+					int x = state.test1(i,j,color);
 					if(x > ans && x > 0)
 						ans = x;
 				}
@@ -130,9 +138,9 @@ public class Dfs extends AI{
 			for(int ii = 0;ii < 8;ii++)
 				for(int jj = 0;jj < 8;jj++)
 					temp.s[ii][jj] = state.s[ii][jj];
-			int x = temp.insert(ss.x,ss.y,color);
+			int x = temp.insert1(ss.x,ss.y,color);
 			x -= mean(temp,3 - color,cnt-1);
-			x *= weight[ss.x][ss.y];
+			//x *= weight[ss.x][ss.y];
 			if(x > ans)
 				ans = x;
 		}
