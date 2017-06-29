@@ -23,10 +23,10 @@ public class State {
         	weight[i][0] = 3;
         	weight[i][7] = 3;
         }
-        weight[0][0] = 10;
-        weight[0][7] = 10;
-        weight[7][0] = 10;
-        weight[7][7] = 10;
+        weight[0][0] = 50;
+        weight[0][7] = 50;
+        weight[7][0] = 50;
+        weight[7][7] = 50;
     }
 
     public State(State an) {
@@ -73,6 +73,13 @@ public class State {
             s[x][y] = 1;
             x -= r; y -= c;
         }
+        return count;
+    }
+
+    public int calEmpty() {
+        int i, j, count = 0;
+        for(i = 0; i < 8; i++) for(j = 0; j < 8; j++) 
+            if(s[i][j] == 0) count++;
         return count;
     }
     

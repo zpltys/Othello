@@ -51,6 +51,11 @@ public class Board extends Canvas {
         g2.fillOval(calBoard(i) + 1, calBoard(j) + 1, scale - 2, scale - 2);
     }
 
+    void proChess(int i, int j, Graphics2D g2, Color c) {
+        g2.setColor(c);
+        g2.drawOval(calBoard(i) + 1, calBoard(j) + 1, scale - 2, scale - 2);
+    }
+
     @Override
     public void paint(Graphics g) {
         Graphics2D g2 = (Graphics2D)g;
@@ -74,7 +79,16 @@ public class Board extends Canvas {
             }
         }
         if(bePosX != PosX || bePosY != PosY) {
-            drawBorder(bePosX, bePosY, g2, Color.black);
+            for(i = 0; i < 8; i++) for(j = 0; j < 8; j++) 
+                drawBorder(i, j, g2, Color.black);
+            for(i = 0; i < 8; i++) for(j = 0; j < 8; j++) {
+                if(state.s[i][j] != 0) {
+                    proChess(i, j, g2, colors[state.s[i][j]]);
+                    continue;
+                }
+                if(state.test(i, j, turn) != -1) proChess(i, j, g2, Color.blue);
+                else proChess(i, j, g2, Color.gray);
+            }
             drawBorder(PosX, PosY, g2, colors[3]);
         }
 
@@ -137,6 +151,7 @@ public class Board extends Canvas {
 
             int x, y;
             if(turn == 2 && testAi) {
+                if(state.calEmpty() < 10) level = state.calEmpty();
                 AI ai = new Dfs(level);
                 Point p = ai.calStep(state, 2);
                 x = (int)p.getX();
