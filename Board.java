@@ -150,10 +150,12 @@ public class Board extends Canvas {
             beforeTime = nowTime;
 
             int x, y;
-            if(turn == 2 && testAi) {
-                if(state.calEmpty() < 10) level = state.calEmpty();
-                AI ai = new Dfs(level);
-                Point p = ai.calStep(state, 2);
+            if(testAi && turn == 2) {
+                AI ai;
+                System.out.println("level:" + level);
+                if(turn == 2)ai = new ABAI(level);
+                else ai = new Dfs(level);
+                Point p = ai.calStep(state, turn);
                 x = (int)p.getX();
                 y = (int)p.getY();
             } else {

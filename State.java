@@ -167,4 +167,33 @@ public class State {
 //        System.out.println("x: " + x + "  y:" + y + "  color:" + color + "val: " + val);
         return val;
     }
+    
+    public int judge(int color)
+    {
+    	int tot = 0;
+    	for(int i = 0;i < 8;i++)
+    		for(int j = 0;j < 8;j++)
+    			if(s[i][j]!=0)
+    			{
+    				if(s[i][j] == color)
+    					tot++;
+    				else
+    					tot--;
+    			}
+    	return tot;
+    }
+    public int judge1(int color)
+    {
+    	int tot = 0;
+    	for(int i = 0;i < 8;i++)
+    		for(int j = 0;j < 8;j++)
+    			if(s[i][j]!=0)
+    			{
+    				if(s[i][j] == color)
+    					tot += weight[i][j];
+    				else
+    					tot -= weight[i][j];
+    			}
+    	return tot;
+    }
 }

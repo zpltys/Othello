@@ -46,6 +46,7 @@ public class MyMenu extends JFrame {
         globalPanel.add(setPanel);
 
         turn = 1;
+        level = 3;
 
         setContentPane(globalPanel);
         setSize(300, 200);
