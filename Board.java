@@ -153,8 +153,7 @@ public class Board extends Canvas {
             if(testAi && turn == 2) {
                 AI ai;
                 System.out.println("level:" + level);
-                if(turn == 2)ai = new ABAI(level);
-                else ai = new Dfs(level);
+                ai = new ABAI(level);
                 Point p = ai.calStep(state, turn);
                 x = (int)p.getX();
                 y = (int)p.getY();
