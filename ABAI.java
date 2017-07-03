@@ -8,10 +8,13 @@ public class ABAI extends AI {
         super();
     }
 
+    //d表示搜索层数
     ABAI(int d) {
         deep = d + 2;
     }
 
+
+    //计算下一步最优落子点
     @Override
     public Point calStep(State state, int color) {
         int empty = state.calEmpty();
@@ -25,6 +28,9 @@ public class ABAI extends AI {
         return r.p;
     }
 
+    //采用alpha-beta剪枝，对于当前状态如果alpha >= beta，则剪枝
+    //pos:表示当前要走的步骤是否与第一步相同，false为不同，true为同。
+    //depth为搜索剩余深度
     private sResult search(State state, int color, boolean pos, int depth, 
             int alpha, int beta) {
 
@@ -66,6 +72,7 @@ public class ABAI extends AI {
                 return new sResult(alpha, beta, p.x, p.y);
             }
             else {
+                //如果当前步无路可走，则连续走
                 if(fcnt > 0) {  
                     sResult r = search(state, color, !pos, depth, alpha, beta);
                     return new sResult(r.beta, r.alpha, r.p.x, r.p.y);
@@ -85,6 +92,7 @@ public class ABAI extends AI {
         }
     }
 
+    //计算权重时的局面计算
     private int countWeight(State s, int color) {
         int ans = 0, i, j;
         for(i = 0; i < 8; i++) for(j = 0; j < 8; j++) {
@@ -93,7 +101,7 @@ public class ABAI extends AI {
         }
         return ans;
     }
-
+   //不计权重的局面计算
     private int countPoint(State s, int color) {
         int ans = 0, i, j;
         for(i = 0; i < 8; i++) for(j = 0; j < 8; j++) {
