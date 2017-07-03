@@ -15,7 +15,7 @@ public class ABAI extends AI {
     @Override
     public Point calStep(State state, int color) {
         int empty = state.calEmpty();
-        if(empty < 5) {
+        if(empty < 7) {
             deep = empty;
             f = true;
         }
@@ -30,13 +30,6 @@ public class ABAI extends AI {
 
         System.out.println("pos:" + pos + " depth:" + depth + " alpha:" + alpha + " beta:" + beta);
         int i, j;
-        /*        for(j = 0; j < 8; j++) {
-                  String s = "";
-                  for(i = 0; i < 8; i++) {
-                  s += state.s[i][j];
-                  }
-                  System.out.println(s);
-                  } */
         if(depth == 0) {
             int val;
             if(f) val = countPoint(state, color);

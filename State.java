@@ -23,10 +23,10 @@ public class State {
         	weight[i][0] = 3;
         	weight[i][7] = 3;
         }
-        weight[0][0] = 50;
-        weight[0][7] = 50;
-        weight[7][0] = 50;
-        weight[7][7] = 50;
+        weight[0][0] = 100;
+        weight[0][7] = 100;
+        weight[7][0] = 100;
+        weight[7][7] = 100;
     }
 
     public State(State an) {
