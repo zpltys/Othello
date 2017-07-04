@@ -18,15 +18,15 @@ public class State {
         
         for(i = 0;i < 8;i++)
         {
-        	weight[0][i] = 3;
-        	weight[7][i] = 3;
-        	weight[i][0] = 3;
-        	weight[i][7] = 3;
+        	weight[0][i] = 2;
+        	weight[7][i] = 2;
+        	weight[i][0] = 2;
+        	weight[i][7] = 2;
         }
-        weight[0][0] = 100;
-        weight[0][7] = 100;
-        weight[7][0] = 100;
-        weight[7][7] = 100;
+        weight[0][0] = 40;
+        weight[0][7] = 40;
+        weight[7][0] = 40;
+        weight[7][7] = 40;
     }
 
     public State(State an) {

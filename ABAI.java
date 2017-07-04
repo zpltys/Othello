@@ -18,10 +18,10 @@ public class ABAI extends AI {
     @Override
     public Point calStep(State state, int color) {
         int empty = state.calEmpty();
-        if(empty < 7) {
+        if(empty < 4) {
             deep = empty;
             f = true;
-        }
+        } else f = false;
         System.out.println("deep:" + deep);
         sResult r = search(state, color, true, deep, -10000, 10000);
         System.out.println("x: " + r.p.x + "  y:" + r.p.y);
